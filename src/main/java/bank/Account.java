@@ -1,5 +1,7 @@
 package bank;
 
+import bank.exceptions.AmountErrorException;
+
 public class Account {
 
   private int id;
@@ -37,4 +39,25 @@ public class Account {
     this.balance = balance;
   }
 
+  public void deposit(double amount) throws AmountErrorException {
+    if (amount < 1) {
+      throw new AmountErrorException ("Cannot deposit a negative amount");
+    } else {
+      double newBalance = balance + amount;
+      setBalance(newBalance);
+      DataSource.updateAccountBalance(id, newBalance);
+    }
+  }
+
+  public void withdraw(double amount) throws AmountErrorException {
+    if (amount < 0) {
+      throw new AmountErrorException("Cannot withdraw a negative amount");
+    } else if (amount > getBalance()){
+      throw new AmountErrorException("Insufficient funds");
+    }else {
+      double newBalance = balance - amount;
+      setBalance(newBalance);
+      DataSource.updateAccountBalance(id, newBalance);
+    }
+  }
 }
